@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+
+{% block title %}Home Screen{% endblock %}
+{% block content %} 
+
+    <style>
+
+        .picture {
+            width: 500px;
+            height: 300px;
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #3041c7;
+            color: white;
+            margin: 1%;
+        }
+        form {
+            display: inline-block;
+            margin: 50px;
+            
+        }
+        img {
+            margin-top: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+    </style>
+
+    <h1>BinGenius</h1>
+    <h3>Please choose an image to find out the recyclability!</h3>
+
+
+    <form method="POST" action="/" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <input type="submit" value="Submit">
+    </form>
+    <div>
+        <img class="picture" src="{{url_for('static', filename=picture)}}" alt=".">
+    </div>
+    
+
+    <h2>Result: {{predClass}}</h2>
+    <h2>Confidence: {{confidence}}</h2>
+    {% if index >= 5  %}
+    <h2>It is not recyclable!</h2>
+    {% else %}
+        {% if confidence >= 85%}
+        <h2>It is very recyclable!</h2>
+        {% elif confidence > 70 %}
+        <h2>It is mostly recyclable</h2>
+        {% elif confidence > 50 %}
+        <h2>This item might be recyclable</h2>
+        {% else %}
+        <h2>It is most likely not recyclable</h2>
+        {% endif %}
+    {% endif %}
+
+
+
+
+
+
+{% endblock %}
