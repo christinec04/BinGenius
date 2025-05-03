@@ -22,7 +22,8 @@ def home():
     picture = 'output.png'
     predClass = 'None'
     confidence = 0.0
-    index = 0
+    index = -1
+    cssFilename = 'home.css'
 
     if request.method == 'POST': 
 
@@ -39,6 +40,7 @@ def home():
 
         # Perform image classification
         predClass, confidence, index = image_classify(s3)
+        round(confidence, 5)
 
 
 
@@ -47,7 +49,7 @@ def home():
 
 
 
-    return render_template("home.html", picture=picture, predClass=predClass, confidence=confidence, index=index)
+    return render_template("home.html", picture=picture, predClass=predClass, confidence=confidence, index=index, cssFilename=cssFilename)
 
 
 @views.route('/result', methods=['GET', 'POST'], endpoint='result')

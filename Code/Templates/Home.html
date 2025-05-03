@@ -1,54 +1,222 @@
 {% extends "base.html" %}
+{% block title %}BinGenius{% endblock %}
 
+{% block content %}
 
-{% block title %}Home Screen{% endblock %}
-{% block content %} 
+<style>
+  /* page background */
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #2c3e50;
+  }
 
-    <style>
+  /* sticky top navbar */
+  nav {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+  }
+  .navbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .navbar .brand {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .navbar .nav-links {
+    display: flex;
+    gap: 16px;
+  }
+  .navbar .nav-links a {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: 500;
+    padding: 6px 8px;
+    border-radius: 4px;
+  }
+  .navbar .nav-links a:hover {
+    background: #ecf0f1;
+  }
 
-        .picture {
-            width: 500px;
-            height: 300px;
-            border: 1px solid black;
-            margin-top: 20px;
-        }
+  /* main page wrapper */
+  .main-wrapper {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 16px;
+  }
 
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: #3041c7;
-            color: white;
-            margin: 1%;
-        }
-        form {
-            display: inline-block;
-            margin: 50px;
-            
-        }
-        img {
-            margin-top: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
+  /* two-column layout */
+  .content {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
 
-    </style>
+  /* left panel (upload & preview) */
+  .image-card {
+    flex: 1 1 600px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .image-preview {
+    width: 100%;
+    padding-top: 56.25%;  /* 16:9 aspect */
+    background: #ecf0f1;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .image-preview img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+  }
+  .placeholder {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 48px;
+    color: #bdc3c7;
+  }
+  .upload-form label {
+    background: #27ae60;
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .upload-form input {
+    display: none;
+  }
 
-    <h1>BinGenius</h1>
-    <h3>Please choose an image to find out the recyclability!</h3>
+  /* right panel (results) */
+  .info-panel {
+    flex: 0 1 300px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .status {
+    text-align: center;
+  }
+  .status h2 {
+    margin: 0 0 8px;
+    font-size: 18px;
+  }
+  .status .status-value {
+    color: #27ae60;
+    font-weight: 600;
+  }
+  .confidence-value {
+    font-size: 36px;
+    font-weight: 600;
+    color: #27ae60;
+    margin: 8px 0 24px;
+  }
+  .slider label {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .track {
+    width: 100%;
+    height: 12px;
+    background: #ecf0f1;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .fill {
+    height: 100%;
+    background: #27ae60;
+    transition: width 0.3s ease;
+  }
+  .analyze-btn {
+    background: #2ecc71;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+  }
+  .analyze-btn:hover {
+    background: #28b463;
+  }
+  
+</style>
 
-
-    <form method="POST" action="/" enctype="multipart/form-data">
-        <input type="file" name="image">
-        <input type="submit" value="Submit">
-    </form>
-    <div>
-        <img class="picture" src="{{url_for('static', filename=picture)}}" alt=".">
+<!-- NAVBAR -->
+<nav>
+  <div class="navbar">
+    <div class="brand">BinGenius</div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/result">About Us</a>
     </div>
-    
+  </div>
+</nav>
 
-    <h2>Result: {{predClass}}</h2>
-    <h2>Confidence: {{confidence}}</h2>
-    {% if index >= 5  %}
+<!-- MAIN CONTENT -->
+<div class="main-wrapper">
+  <div class="content">
+    <!-- IMAGE UPLOAD + PREVIEW -->
+    <div class="image-card">
+      <div class="image-preview">
+        {% if picture %}
+          <img src="{{ url_for('static', filename=picture) }}" alt="" onerror="this.style.display='none'">
+        {% else %}
+          <div class="placeholder">+</div>
+        {% endif %}
+      </div>
+      <form method="POST" action="/" enctype="multipart/form-data" class="upload-form">
+        <label>
+          <input type="file" name="image">
+          Upload
+        </label>
+      </form>
+    </div>
+
+    <!-- RESULTS PANEL -->
+    <div class="info-panel">
+      <div class="status">
+        <h1>Recyclable: <span class="status-value">{{ predClass }}</span></h1>
+        <h1 >Confidence: <span class="confidence-value">{{ "%.4f"|format(confidence) }}%</span></h1>
+      </div>
+      <div class="slider">
+        <label>Confidence</label>
+        <div class="track">
+          <div class="fill" style="width: {{ confidence }}%;"></div>
+        </div>
+      </div>
+      {% if index == -1 %}
+        <h2>Upload an image to analyze!</h2>
+      {% elif index >= 5  %}
     <h2>It is not recyclable!</h2>
     {% else %}
         {% if confidence >= 85%}
@@ -61,10 +229,12 @@
         <h2>It is most likely not recyclable</h2>
         {% endif %}
     {% endif %}
+    
 
-
-
-
-
-
+      <button class="analyze-btn" onclick="document.querySelector('.upload-form').submit()">
+        Analyze
+      </button>
+    </div>
+  </div>
+</div>
 {% endblock %}
