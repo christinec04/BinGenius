@@ -4,7 +4,8 @@ CSCI-B 351: Introduction to Artificial Intelligence
 
 What to install to run our application. 
 1. NOTE: Due to the size of one of the files in the virtual environment, we were not able to push it up to GitHub, so you first need to start a virtual environment before starting to download all of the dependencies
-2. Start a venv like such: python3 -m venv .venv | source .venv/bin/activate
+2. Start a venv like such: python3 -m venv .venv
+3. Then run this: source .venv/bin/activate
 4. Requirements.txt has all of the dependencies you need to run our app, so run this:
   pip install -r requirements.txt
 
