@@ -21,7 +21,6 @@ def home():
     cssFilename = 'home.css'
 
     if request.method == 'POST': 
-
         file = request.files['image']
         filename = file.filename
         s1 = filename
@@ -38,10 +37,6 @@ def home():
         round(confidence, 5)
 
     return render_template("home.html", picture=picture, predClass=predClass, confidence=confidence, index=index, cssFilename=cssFilename)
-
-@views.route('/result', methods=['GET', 'POST'], endpoint='result')
-def result():
-    return render_template("result.html")
 
 # code for model
 transform = transforms.Compose([
@@ -71,7 +66,6 @@ def image_classify(path):
     with torch.no_grad():
         outputs = model(input_tensor)
         _, predicted = torch.max(outputs, 1)
-        # print("Predicted class index:", predicted.item())
 
         predClass = class_names[int(predicted.item())]
     
@@ -79,12 +73,7 @@ def image_classify(path):
         probabilities = F.softmax(outputs, dim=1)  # Shape: [1, num_classes]
 
         # Get the predicted class index and confidence
-        # predicted_class = torch.argmax(probabilities, dim=1).item()
         confidence = probabilities[0][predicted].item() * 100
 
         return predClass, confidence, int(predicted.item())
-    
-# cla, con =image_classify('data/paper/paper1.jpg')
-
-# print(f"Class: {cla}  Confidence: {con:.4f}")
 

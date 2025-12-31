@@ -7,9 +7,7 @@ import torch.nn.functional as F
 import os
 
 # ==== CONFIG ====
-# DATA_DIR = "/Users/adityavaidya/Desktop/Class folders/Data Analysis and Mining/FinalProject/Recycling"
 DATA_DIR = "data"
-# MODEL_SAVE_PATH = "/Users/adityavaidya/Desktop/Class folders/Data Analysis and Mining/FinalProject/Recycling/mobilenetv2_trashnet.pth"
 MODEL_SAVE_PATH = "models/mobilenetv2_trashnet2.pth"
 os.makedirs(os.path.dirname(MODEL_SAVE_PATH), exist_ok=True)
 BATCH_SIZE = 32
@@ -19,11 +17,6 @@ LEARNING_RATE = 1e-4
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # ==== TRANSFORMS ====
-# transform = transforms.Compose([
-#     transforms.Resize((224, 224)),
-#     transforms.ToTensor(),
-#     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-# ])
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.3, hue=0.1),  # Lighting robustness
