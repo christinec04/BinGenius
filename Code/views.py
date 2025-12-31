@@ -1,6 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, request, session, url_for, make_response, Flask, abort
 
-
 #imports for data processing and training
 import torch
 import torch.nn as nn
@@ -10,15 +9,11 @@ from PIL import Image
 import torch.nn.functional as F
 import os
 
-
-
 views = Blueprint('views', __name__)
-
-
+root = os.path.dirname(os.path.abspath(__file__))
 
 @views.route('/', methods=['GET', 'POST'], endpoint='home')
 def home():
-
     picture = 'output.png'
     predClass = 'None'
     confidence = 0.0
@@ -30,7 +25,7 @@ def home():
         file = request.files['image']
         filename = file.filename
         s1 = filename
-        s2 = '/Users/pranavvangari/B351/FinalProject/Code/Static/Pictures/'
+        s2 = root + '/Static/Pictures/'
         s3 = "%s%s" % (s2, s1)
 
         file.save(s3)
@@ -42,27 +37,13 @@ def home():
         predClass, confidence, index = image_classify(s3)
         round(confidence, 5)
 
-
-
-
-
-
-
-
     return render_template("home.html", picture=picture, predClass=predClass, confidence=confidence, index=index, cssFilename=cssFilename)
-
 
 @views.route('/result', methods=['GET', 'POST'], endpoint='result')
 def result():
-    
-    
-
     return render_template("result.html")
 
-
-
 # code for model
-
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
