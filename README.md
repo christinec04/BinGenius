@@ -1,5 +1,3 @@
-Group Members: Christine, Atmikha, Pranav, Aditya, Jake
-
 What to install to run our application. 
 1. NOTE: Due to the size of one of the files in the virtual environment, we were not able to push it up to GitHub, so you first need to start a virtual environment before starting to download all of the dependencies
 2. Start a venv like such: `python3 -m venv .venv`
